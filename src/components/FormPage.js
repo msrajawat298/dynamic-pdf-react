@@ -1,43 +1,54 @@
 import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Grid } from '@mui/material';
+import { TextField, Button, Container, Typography, Grid, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const formSchema = Yup.object().shape({
-  workName: Yup.string().required('Required'),
-  agency: Yup.string().required('Required'),
+  jp: Yup.string().required('Required'),
+  zp: Yup.string().required('Required'),
   estimatedCost: Yup.number().required('Required'),
   authorityTS: Yup.string().required('Required'),
   authorityAS: Yup.string().required('Required'),
   headOfAccount: Yup.string().required('Required'),
   provision: Yup.string().required('Required'),
-  rates: Yup.string().required('Required'),
   sanctionedYear: Yup.string().required('Required'),
-  technicalReport: Yup.string().required('Required'),
-  detailedEstimate: Yup.string().required('Required'),
+  reportTitle: Yup.string().required('Required'),
+  workName: Yup.string().required('Required'),
+  agency: Yup.string().required('Required'),
+  technicalReport: Yup.array().of(Yup.string().required('Required')),
+  rates: Yup.string().required('Required'),
+  certifications: Yup.array().of(Yup.string().required('Required')),
+  subEngineer: Yup.string().required('Required'),
+  assistantEngineer: Yup.string().required('Required'),
 });
 
 const initialValues = {
-  workName: '',
-  agency: '',
+  jp: '',
+  zp: '',
   estimatedCost: '',
   authorityTS: '',
   authorityAS: '',
   headOfAccount: '',
   provision: '',
-  rates: '',
   sanctionedYear: '',
-  technicalReport: '',
-  detailedEstimate: '',
+  reportTitle: 'TECHNICAL REPORT',
+  workName: '',
+  agency: '',
+  technicalReport: [''],
+  rates: '',
+  certifications: [''],
+  subEngineer: '',
+  assistantEngineer: '',
 };
 
 const FormPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
-    // Save form data to context or state
-    navigate('/preview', { state: { formData: values } }); 
+    navigate('/preview', { state: { formData: values } });
   };
 
   return (
@@ -50,31 +61,31 @@ const FormPage = () => {
         validationSchema={formSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched, handleChange, handleBlur, values }) => (
+        {({ errors, touched, values, handleChange, handleBlur }) => (
           <Form>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label="Name of Work"
-                  name="workName"
-                  value={values.workName}
+                  label="J.P."
+                  name="jp"
+                  value={values.jp}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.workName && !!errors.workName}
-                  helperText={touched.workName && errors.workName}
+                  error={touched.jp && !!errors.jp}
+                  helperText={touched.jp && errors.jp}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label="Agency"
-                  name="agency"
-                  value={values.agency}
+                  label="Z.P."
+                  name="zp"
+                  value={values.zp}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.agency && !!errors.agency}
-                  helperText={touched.agency && errors.agency}
+                  error={touched.zp && !!errors.zp}
+                  helperText={touched.zp && errors.zp}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -141,18 +152,6 @@ const FormPage = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Rates"
-                  name="rates"
-                  value={values.rates}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.rates && !!errors.rates}
-                  helperText={touched.rates && errors.rates}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
                   label="Sanctioned Year"
                   name="sanctionedYear"
                   value={values.sanctionedYear}
@@ -165,29 +164,127 @@ const FormPage = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Technical Report"
-                  name="technicalReport"
-                  value={values.technicalReport}
+                  label="Work Name"
+                  name="workName"
+                  value={values.workName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.technicalReport && !!errors.technicalReport}
-                  helperText={touched.technicalReport && errors.technicalReport}
-                  multiline
-                  rows={4}
+                  error={touched.workName && !!errors.workName}
+                  helperText={touched.workName && errors.workName}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Detailed Estimate"
-                  name="detailedEstimate"
-                  value={values.detailedEstimate}
+                  label="Agency"
+                  name="agency"
+                  value={values.agency}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.detailedEstimate && !!errors.detailedEstimate}
-                  helperText={touched.detailedEstimate && errors.detailedEstimate}
+                  error={touched.agency && !!errors.agency}
+                  helperText={touched.agency && errors.agency}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FieldArray name="technicalReport">
+                  {({ push, remove }) => (
+                    <>
+                      {values.technicalReport.map((report, index) => (
+                        <Grid container spacing={2} key={index}>
+                          <Grid item xs={10}>
+                            <TextField
+                              fullWidth
+                              label={`Technical Report Item ${index + 1}`}
+                              name={`technicalReport.${index}`}
+                              value={report}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={touched.technicalReport?.[index] && !!errors.technicalReport?.[index]}
+                              helperText={touched.technicalReport?.[index] && errors.technicalReport?.[index]}
+                            />
+                          </Grid>
+                          <Grid item xs={2}>
+                            <IconButton onClick={() => remove(index)}>
+                              <RemoveIcon />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      ))}
+                      <Button startIcon={<AddIcon />} onClick={() => push('')}>
+                        Add Technical Report Item
+                      </Button>
+                    </>
+                  )}
+                </FieldArray>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Rates"
+                  name="rates"
+                  value={values.rates}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.rates && !!errors.rates}
+                  helperText={touched.rates && errors.rates}
                   multiline
-                  rows={4}
+                  rows={2}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FieldArray name="certifications">
+                  {({ push, remove }) => (
+                    <>
+                      {values.certifications.map((cert, index) => (
+                        <Grid container spacing={2} key={index}>
+                          <Grid item xs={10}>
+                            <TextField
+                              fullWidth
+                              label={`Certification ${index + 1}`}
+                              name={`certifications.${index}`}
+                              value={cert}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={touched.certifications?.[index] && !!errors.certifications?.[index]}
+                              helperText={touched.certifications?.[index] && errors.certifications?.[index]}
+                            />
+                          </Grid>
+                          <Grid item xs={2}>
+                            <IconButton onClick={() => remove(index)}>
+                              <RemoveIcon />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      ))}
+                      <Button startIcon={<AddIcon />} onClick={() => push('')}>
+                        Add Certification
+                      </Button>
+                    </>
+                  )}
+                </FieldArray>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Sub Engineer"
+                  name="subEngineer"
+                  value={values.subEngineer}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.subEngineer && !!errors.subEngineer}
+                  helperText={touched.subEngineer && errors.subEngineer}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Assistant Engineer"
+                  name="assistantEngineer"
+                  value={values.assistantEngineer}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.assistantEngineer && !!errors.assistantEngineer}
+                  helperText={touched.assistantEngineer && errors.assistantEngineer}
                 />
               </Grid>
               <Grid item xs={12}>
