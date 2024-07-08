@@ -1,4 +1,5 @@
-export const data = {
+import { Text } from '@react-pdf/renderer';
+export const defaultData = {
   jp: "J.P. - MEHGAON",
   zp: "Z.P. - BHIND",
   estimatedCost: "282000.00",
@@ -43,3 +44,27 @@ export const data = {
     finance: { labour: 0, material: 0 },
   },
 };
+
+export const sections = [
+  { serial: '1', heading: 'Name of Work', value: defaultData.workName },
+  { serial: '2', heading: 'Agency', value: defaultData.agency },
+  { serial: '3', heading: 'Estimated Cost', value: defaultData.estimatedCost },
+  { serial: '4', heading: 'Authority For T/S', value: defaultData.authorityTS },
+  { serial: '5', heading: 'Authority For A/S', value: defaultData.authorityAS },
+  { serial: '6', heading: 'Head of Account', value: defaultData.headOfAccount },
+  { serial: '7', heading: 'Sanctioned Year', value: defaultData.sanctionedYear },
+  { serial: '8', heading: 'Provision', value: defaultData.provision.map((item, index) => (<Text key={index}>{item}</Text>)) },
+  { serial: '9', heading: 'Rates', value: defaultData.rates },
+];
+
+export const HEAD_OF_ACCOUNT = [
+  "14th Finance + 15th Finance",
+  "14th Finance",
+  "15th Finance + MGNREGA",
+  "15th Finance",
+  "5th Finance",
+  "5th Finance + 15th Finance",
+  "5th Finance + 15th Finance + MGNREGA",
+  "5th Finance + MGNREGA",
+  "5th Finance/14th Finance/15th Finance + MGNREGA",
+];

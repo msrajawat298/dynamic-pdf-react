@@ -2,23 +2,25 @@ import React from 'react';
 import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Grid, IconButton } from '@mui/material';
+import { TextField, Button, Container, Typography, Grid, IconButton, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { HEAD_OF_ACCOUNT } from '../utils/constant';
 
 const formSchema = Yup.object().shape({
   jp: Yup.string().required('Required'),
+  sorPeriod: Yup.string().required('Required'),
   zp: Yup.string().required('Required'),
   estimatedCost: Yup.number().required('Required'),
+  estimatedName: Yup.string().required('Required'),
   authorityTS: Yup.string().required('Required'),
   authorityAS: Yup.string().required('Required'),
   headOfAccount: Yup.string().required('Required'),
-  provision: Yup.string().required('Required'),
   sanctionedYear: Yup.string().required('Required'),
   reportTitle: Yup.string().required('Required'),
   workName: Yup.string().required('Required'),
   agency: Yup.string().required('Required'),
-  technicalReport: Yup.array().of(Yup.string().required('Required')),
+  provision: Yup.array().of(Yup.string().required('Required')),
   rates: Yup.string().required('Required'),
   certifications: Yup.array().of(Yup.string().required('Required')),
   subEngineer: Yup.string().required('Required'),
@@ -29,19 +31,20 @@ const initialValues = {
   jp: '',
   zp: '',
   estimatedCost: '',
+  estimatedName: '',
   authorityTS: '',
   authorityAS: '',
   headOfAccount: '',
-  provision: '',
   sanctionedYear: '',
   reportTitle: 'TECHNICAL REPORT',
   workName: '',
   agency: '',
-  technicalReport: [''],
+  provision: [''],
   rates: '',
   certifications: [''],
   subEngineer: '',
   assistantEngineer: '',
+  sorPeriod: '',
 };
 
 const FormPage = () => {
@@ -54,7 +57,7 @@ const FormPage = () => {
   return (
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
-        Fill out the form
+        Fill Data for Estimate Creation
       </Typography>
       <Formik
         initialValues={initialValues}
@@ -64,6 +67,60 @@ const FormPage = () => {
         {({ errors, touched, values, handleChange, handleBlur }) => (
           <Form>
             <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="sor-period-label">Select SOR Period</InputLabel>
+                  <Select
+                    labelId="sor-period-label"
+                    id="sor-period"
+                    name="sorPeriod"
+                    value={values.sorPeriod}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.sorPeriod && !!errors.sorPeriod}
+                  >
+                    <MenuItem value="RES-11/04/2022">RES-11/04/2022</MenuItem>
+                    <MenuItem value="MGNREGA- 2023-24">MGNREGA- 2023-24</MenuItem>
+                  </Select>
+                  {touched.sorPeriod && errors.sorPeriod && (
+                    <FormHelperText error>{errors.sorPeriod}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Estimated Name"
+                  name="estimatedName"
+                  type="text"
+                  value={values.estimatedName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.estimatedName && !!errors.estimatedName}
+                  helperText={touched.estimatedName && errors.estimatedName}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="head-of-account-label">Head of Account</InputLabel>
+                  <Select
+                    labelId="head-of-account-label"
+                    id="headOfAccount"
+                    name="headOfAccount"
+                    value={values.headOfAccount}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.headOfAccount && !!errors.headOfAccount}
+                  >
+                    {HEAD_OF_ACCOUNT.map((account, index) => (
+                      <MenuItem key={index} value={account}>{account}</MenuItem>
+                    ))}
+                  </Select>
+                  {touched.headOfAccount && errors.headOfAccount && (
+                    <FormHelperText error>{errors.headOfAccount}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
               <Grid item xs={6}>
                 <TextField
                   fullWidth
@@ -99,6 +156,18 @@ const FormPage = () => {
                   onBlur={handleBlur}
                   error={touched.estimatedCost && !!errors.estimatedCost}
                   helperText={touched.estimatedCost && errors.estimatedCost}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Name of Work"
+                  name="workName"
+                  value={values.workName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.workName && !!errors.workName}
+                  helperText={touched.workName && errors.workName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -140,18 +209,6 @@ const FormPage = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Provision"
-                  name="provision"
-                  value={values.provision}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.provision && !!errors.provision}
-                  helperText={touched.provision && errors.provision}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
                   label="Sanctioned Year"
                   name="sanctionedYear"
                   value={values.sanctionedYear}
@@ -159,18 +216,6 @@ const FormPage = () => {
                   onBlur={handleBlur}
                   error={touched.sanctionedYear && !!errors.sanctionedYear}
                   helperText={touched.sanctionedYear && errors.sanctionedYear}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Work Name"
-                  name="workName"
-                  value={values.workName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.workName && !!errors.workName}
-                  helperText={touched.workName && errors.workName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -186,21 +231,21 @@ const FormPage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FieldArray name="technicalReport">
+                <FieldArray name="provision">
                   {({ push, remove }) => (
                     <>
-                      {values.technicalReport.map((report, index) => (
+                      {values.provision.map((report, index) => (
                         <Grid container spacing={2} key={index}>
                           <Grid item xs={10}>
                             <TextField
                               fullWidth
                               label={`Technical Report Item ${index + 1}`}
-                              name={`technicalReport.${index}`}
+                              name={`provision.${index}`}
                               value={report}
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              error={touched.technicalReport?.[index] && !!errors.technicalReport?.[index]}
-                              helperText={touched.technicalReport?.[index] && errors.technicalReport?.[index]}
+                              error={touched.provision?.[index] && !!errors.provision?.[index]}
+                              helperText={touched.provision?.[index] && errors.provision?.[index]}
                             />
                           </Grid>
                           <Grid item xs={2}>
