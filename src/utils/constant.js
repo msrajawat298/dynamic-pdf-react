@@ -1,4 +1,47 @@
 import { Text } from '@react-pdf/renderer';
+
+export const SOR_PERIOD = [
+  "RES-11/04/2022",
+  "MGNREGA- 2023-24"
+];
+
+export const AUTHORITY_TS = [
+  "Excutive Engineer, E.E.R.E.S. Division Bhind/ S.D.O.R.E.S./ A.E. MGNREGA",
+  "Assistant Engineer Janpad Panchayat",
+  "Excutive Engineer, E.E.R.E.S. Division Bhind",
+];
+
+export const AUTHORITY_AS = [
+  "Collector/ C.E.O. Zila Panchayat Bhind/ C.E.O. Janpad PanchayaT",
+  "Collector Bhind",
+  "Sarpanch Gram Panchayat",
+];
+
+export const HEAD_OF_ACCOUNT = [
+  "14th Finance + 15th Finance",
+  "14th Finance",
+  "15th Finance + MGNREGA",
+  "15th Finance",
+  "5th Finance",
+  "5th Finance + 15th Finance",
+  "5th Finance + 15th Finance + MGNREGA",
+  "5th Finance + MGNREGA",
+  "5th Finance/14th Finance/15th Finance + MGNREGA",
+];
+
+export const RATES = [
+  "The Rates are addopted as per S.O.R. of ( Panchayat and Rural Development Department )  Rural Engineering Services, State S.O.R. with effected from 11.04.2022",
+  "The Rates are addopted as per S.O.R. of ( Panchayat and Rural Development Department )  MGNREGA, State S.O.R. with effected from 01.04.2023"
+];
+
+export const SANCTIONED_YEAR = [
+  "FY - 2022-23",
+  "FY - 2023-24",
+  "FY - 2024-25",
+  "FY - 2025-26",
+];
+
+
 export const defaultData = {
   jp: "J.P. - MEHGAON",
   zp: "Z.P. - BHIND",
@@ -57,14 +100,41 @@ export const sections = [
   { serial: '9', heading: 'Rates', value: defaultData.rates },
 ];
 
-export const HEAD_OF_ACCOUNT = [
-  "14th Finance + 15th Finance",
-  "14th Finance",
-  "15th Finance + MGNREGA",
-  "15th Finance",
-  "5th Finance",
-  "5th Finance + 15th Finance",
-  "5th Finance + 15th Finance + MGNREGA",
-  "5th Finance + MGNREGA",
-  "5th Finance/14th Finance/15th Finance + MGNREGA",
-];
+
+export const BLOCK = {
+  ATER: {
+    "Harendra_Singh": [],
+    "Jagdish_Narwariya": [],
+    "Lokendra_Varma": [],
+    "Pavan_Shrivas": [],
+  },
+  BHIND: {
+    "Deepak_Garg": [],
+    "Dharmendra_Duvey": [],
+    "Rohit_Uniya": [],
+  },
+  MEHGAON: {
+    "Dhruv_Bharadwaj": [
+      "AANTO",
+      "ADOKHAR",
+      "AMAYAN",
+      "BADERA",
+      "BHAROLIKALAN",
+      "BHAROLIKHURD",
+      "BIRGWAN",
+      "GIJURRA",
+      "GORAM",
+      "GOUARA",
+      "KHERIYASINDH",
+      "KHEROLEE",
+      "LAHARA",
+      "MEHARA",
+      "SEMARA",
+      "SINGPURA",
+      "VIJAYPURA",
+    ],
+    "Narendra_Bharadwaj": [],
+    "Pradeep_Sharma": [],
+    "Raghvendra Pachori": [],
+  }
+};

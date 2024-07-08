@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Container, Typography, Grid, IconButton, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { HEAD_OF_ACCOUNT } from '../utils/constant';
+import { HEAD_OF_ACCOUNT, AUTHORITY_TS, AUTHORITY_AS, SOR_PERIOD, BLOCK, SANCTIONED_YEAR } from '../utils/constant';
 
 const formSchema = Yup.object().shape({
   jp: Yup.string().required('Required'),
+  block: Yup.string().required('Required'),
+  createdBy: Yup.string().required('Required'),
   sorPeriod: Yup.string().required('Required'),
   zp: Yup.string().required('Required'),
   estimatedCost: Yup.number().required('Required'),
@@ -30,6 +32,7 @@ const formSchema = Yup.object().shape({
 const initialValues = {
   jp: '',
   zp: '',
+  block: '',
   estimatedCost: '',
   estimatedName: '',
   authorityTS: '',
@@ -45,6 +48,7 @@ const initialValues = {
   subEngineer: '',
   assistantEngineer: '',
   sorPeriod: '',
+  createdBy: '',
 };
 
 const FormPage = () => {
@@ -53,7 +57,6 @@ const FormPage = () => {
   const handleSubmit = (values) => {
     navigate('/preview', { state: { formData: values } });
   };
-
   return (
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
@@ -67,6 +70,27 @@ const FormPage = () => {
         {({ errors, touched, values, handleChange, handleBlur }) => (
           <Form>
             <Grid container spacing={3}>
+            <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="sanctioned-year-label">Sanctioned Year</InputLabel>
+                  <Select
+                    labelId="sanctioned-year-label"
+                    id="sanctionedYear"
+                    name='sanctionedYear'
+                    value={values.sanctionedYear}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.sanctionedYear && !!errors.sanctionedYear}
+                  >
+                    {SANCTIONED_YEAR.map((year, index) => (
+                      <MenuItem key={index} value={year}>{year}</MenuItem>
+                    ))}
+                  </Select>
+                  {touched.sanctionedYear && errors.sanctionedYear && (
+                    <FormHelperText error>{errors.sanctionedYear}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="sor-period-label">Select SOR Period</InputLabel>
@@ -79,8 +103,9 @@ const FormPage = () => {
                     onBlur={handleBlur}
                     error={touched.sorPeriod && !!errors.sorPeriod}
                   >
-                    <MenuItem value="RES-11/04/2022">RES-11/04/2022</MenuItem>
-                    <MenuItem value="MGNREGA- 2023-24">MGNREGA- 2023-24</MenuItem>
+                    {SOR_PERIOD.map((authority, index) => (
+                      <MenuItem key={index} value={authority}>{authority}</MenuItem>
+                    ))}
                   </Select>
                   {touched.sorPeriod && errors.sorPeriod && (
                     <FormHelperText error>{errors.sorPeriod}</FormHelperText>
@@ -100,6 +125,125 @@ const FormPage = () => {
                   helperText={touched.estimatedName && errors.estimatedName}
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Name of Work"
+                  name="workName"
+                  value={values.workName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.workName && !!errors.workName}
+                  helperText={touched.workName && errors.workName}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="block-label">Block or JANPAD PANCHAYAT (J.P) </InputLabel>
+                  <Select
+                    labelId="block-label"
+                    id="block"
+                    name="block"
+                    value={values.block}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.block && !!errors.block}
+                  >
+                    {Object.keys(BLOCK).map((blockKey, index) => (
+                      <MenuItem key={index} value={blockKey}>{blockKey}</MenuItem>
+                    ))}
+                  </Select>
+                  {touched.block && errors.block && (
+                    <FormHelperText error>{errors.block}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="created-by-label">Created By Engg.</InputLabel>
+                  <Select
+                    labelId="created-by-label"
+                    id="createdBy"
+                    name="createdBy"
+                    value={values.createdBy}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.createdBy && !!errors.createdBy}
+                  >
+                    {values?.block && Object?.keys(BLOCK[values?.block])?.map((createdByOption, index) => (
+                      <MenuItem key={index} value={createdByOption}>{createdByOption}</MenuItem>
+                    ))}
+                  </Select>
+                  {touched.createdBy && errors.createdBy && (
+                    <FormHelperText error>{errors.createdBy}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth error={touched.gramPanchayat && !!errors.gramPanchayat}>
+                  <InputLabel id="gram-panchayat-label">Gram Panchayat</InputLabel>
+                  <Select
+                    labelId="gram-panchayat-label"
+                    id="gramPanchayat"
+                    name="gramPanchayat"
+                    value={values.gramPanchayat}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  >
+                  {values.block && values.createdBy && Array.isArray(BLOCK[values.block][values.createdBy]) ? (
+                    BLOCK[values.block][values.createdBy].map((option, index) => (
+                      <MenuItem key={index} value={option}>{option}</MenuItem>
+                    ))
+                  ) : null}
+                  </Select>
+                  {touched.gramPanchayat && errors.gramPanchayat && (
+                    <FormHelperText>{errors.gramPanchayat}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="authority-ts-label">Authority TS</InputLabel>
+                <Select
+                  labelId="authority-ts-label"
+                  id="authorityTS"
+                  name="authorityTS"
+                  value={values.authorityTS}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.authorityTS && !!errors.authorityTS}
+                >
+                  {AUTHORITY_TS.map((authority, index) => (
+                    <MenuItem key={index} value={authority}>{authority}</MenuItem>
+                  ))}
+                </Select>
+                {touched.authorityTS && errors.authorityTS && (
+                  <FormHelperText error>{errors.authorityTS}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="authority-as-label">Authority AS</InputLabel>
+                <Select
+                  labelId="authority-as-label"
+                  id="authorityAS"
+                  name="authorityAS"
+                  value={values.authorityAS}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.authorityAS && !!errors.authorityAS}
+                >
+                  {AUTHORITY_AS.map((authority, index) => (
+                    <MenuItem key={index} value={authority}>{authority}</MenuItem>
+                  ))}
+                </Select>
+                {touched.authorityAS && errors.authorityAS && (
+                  <FormHelperText error>{errors.authorityAS}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="head-of-account-label">Head of Account</InputLabel>
@@ -121,30 +265,6 @@ const FormPage = () => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="J.P."
-                  name="jp"
-                  value={values.jp}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.jp && !!errors.jp}
-                  helperText={touched.jp && errors.jp}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Z.P."
-                  name="zp"
-                  value={values.zp}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.zp && !!errors.zp}
-                  helperText={touched.zp && errors.zp}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -161,42 +281,6 @@ const FormPage = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Name of Work"
-                  name="workName"
-                  value={values.workName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.workName && !!errors.workName}
-                  helperText={touched.workName && errors.workName}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Authority for T/S"
-                  name="authorityTS"
-                  value={values.authorityTS}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.authorityTS && !!errors.authorityTS}
-                  helperText={touched.authorityTS && errors.authorityTS}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Authority for A/S"
-                  name="authorityAS"
-                  value={values.authorityAS}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.authorityAS && !!errors.authorityAS}
-                  helperText={touched.authorityAS && errors.authorityAS}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
                   label="Head of Account"
                   name="headOfAccount"
                   value={values.headOfAccount}
@@ -204,18 +288,6 @@ const FormPage = () => {
                   onBlur={handleBlur}
                   error={touched.headOfAccount && !!errors.headOfAccount}
                   helperText={touched.headOfAccount && errors.headOfAccount}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Sanctioned Year"
-                  name="sanctionedYear"
-                  value={values.sanctionedYear}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.sanctionedYear && !!errors.sanctionedYear}
-                  helperText={touched.sanctionedYear && errors.sanctionedYear}
                 />
               </Grid>
               <Grid item xs={12}>
