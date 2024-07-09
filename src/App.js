@@ -5,7 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import About from './components/pages/About';
 import Contact from './components/pages/Contact';
-import FormPage from './components/FormPage';
+import FormPage from './components/FormPage/FormPage';
 import PDFPreview from './components/PDFPreview';
 
 function App() {
